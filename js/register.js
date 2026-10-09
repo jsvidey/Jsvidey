@@ -19,21 +19,40 @@
     input.type = input.type === "password" ? "text" : "password";
     button.innerHTML = input.type === "password" ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
   }));
-  document.getElementById("registerForm")?.addEventListener("submit", event => {
+  // Paste the Supabase Project URL and anon/publishable key from Project Settings > API.
+  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+  document.getElementById("registerForm")?.addEventListener("submit", async event => {
     event.preventDefault();
     const name = document.getElementById("regName").value.trim();
     const email = document.getElementById("regEmail").value.trim();
     const password = document.getElementById("regPassword").value;
     const message = document.getElementById("registerMessage");
-    if (!/^[A-Za-z0-9_]{3,24}$/.test(name)) { message.textContent = "Nama pengguna harus 3–24 karakter: huruf, angka, atau garis bawah."; return; }
-    if (password.length < 8) { message.textContent = "Kata sandi minimal 8 karakter."; return; }
-    if (!document.getElementById("acceptTerms").checked) { message.textContent = "Centang persetujuan ketentuan terlebih dahulu."; return; }
+    const lang = localStorage.getItem("jsvidey-language") || "id";
+    const showMessage = (text, success = false) => { message.className = success ? "form-message success" : "form-message"; message.textContent = text; };
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(name)) return showMessage(lang === "en" ? "Username must be 3–24 characters: letters, numbers, or underscores." : "Nama pengguna harus 3–24 karakter: huruf, angka, atau garis bawah.");
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showMessage(lang === "en" ? "Enter a valid email address." : "Masukkan alamat email yang valid.");
+    if (password.length < 8) return showMessage(lang === "en" ? "Password must be at least 8 characters." : "Kata sandi minimal 8 karakter.");
+    if (!document.getElementById("acceptTerms").checked) return showMessage(lang === "en" ? "Please accept the terms first." : "Centang persetujuan ketentuan terlebih dahulu.");
+    if (SUPABASE_URL.includes("YOUR_") || SUPABASE_ANON_KEY.includes("YOUR_")) return showMessage(lang === "en" ? "Supabase is not configured yet. Add your Project URL and anon key in js/register.js." : "Supabase belum dikonfigurasi. Isi Project URL dan anon key di js/register.js.");
+    const form = document.getElementById("registerForm");
+    const submit = form.querySelector('button[type="submit"]'); submit.disabled = true;
     try {
-      localStorage.setItem("jsvidey-demo-user", JSON.stringify({name,email,password}));
-      localStorage.setItem("jsvidey-session", JSON.stringify({name,email,at:Date.now()}));
-    } catch (_) { message.textContent = "Browser tidak mengizinkan penyimpanan lokal."; return; }
-    message.className = "form-message success";
-    message.textContent = "Akun demo berhasil dibuat. Membuka dashboard...";
-    setTimeout(() => location.href = "dashboard.html", 450);
+      const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data, error } = await client.auth.signUp({ email, password, options: { data: { username: name, display_name: name } } });
+      if (error) throw error;
+      if (!data.user) throw new Error("Signup did not return a user.");
+      if (!data.session) {
+        showMessage(lang === "en" ? "Registration received. Check your email to confirm your account, then log in." : "Pendaftaran diterima. Periksa email untuk konfirmasi akun, lalu masuk.", true);
+        return;
+      }
+      localStorage.setItem("jsvidey-session", JSON.stringify({ id: data.user.id, name, username: name, email: data.user.email, at: Date.now() }));
+      showMessage(lang === "en" ? "Account created. Opening dashboard..." : "Akun berhasil dibuat. Membuka dashboard...", true);
+      setTimeout(() => location.href = "dashboard.html", 500);
+    } catch (error) {
+      let text = error?.message || "Registration failed.";
+      if (/duplicate key|username.*already|unique constraint/i.test(text)) text = lang === "en" ? "That username is already taken." : "Nama pengguna sudah digunakan.";
+      showMessage(lang === "en" ? `Registration failed: ${text}` : `Pendaftaran gagal: ${text}`);
+    } finally { submit.disabled = false; }
   });
 })();

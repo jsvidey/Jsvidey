@@ -19,27 +19,37 @@
     input.type = input.type === "password" ? "text" : "password";
     button.innerHTML = input.type === "password" ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
   }));
+  // Paste the Supabase Project URL and anon/publishable key from Project Settings > API.
+  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
   const form = document.getElementById("loginForm");
-  form?.addEventListener("submit", event => {
+  const showMessage = (message, success = false) => {
+    const el = document.getElementById("loginMessage");
+    el.className = success ? "form-message success" : "form-message";
+    el.textContent = message;
+  };
+  form?.addEventListener("submit", async event => {
     event.preventDefault();
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
-    const message = document.getElementById("loginMessage");
-    if (!email || !password) { message.textContent = "Isi email dan kata sandi terlebih dahulu."; return; }
-    let stored = null;
-    try { stored = JSON.parse(localStorage.getItem("jsvidey-demo-user") || "null"); } catch (_) {}
-    if (stored && stored.email.toLowerCase() !== email.toLowerCase()) {
-      message.textContent = "Email tidak ditemukan pada data demo di browser ini. Silakan daftar terlebih dahulu.";
-      return;
+    const lang = localStorage.getItem("jsvidey-language") || "id";
+    if (!email || !password) return showMessage(lang === "en" ? "Enter your email and password." : "Isi email dan kata sandi terlebih dahulu.");
+    if (SUPABASE_URL.includes("YOUR_") || SUPABASE_ANON_KEY.includes("YOUR_")) {
+      return showMessage(lang === "en" ? "Supabase is not configured yet. Add your Project URL and anon key in js/login.js." : "Supabase belum dikonfigurasi. Isi Project URL dan anon key di js/login.js.");
     }
-    if (stored && stored.password !== password) {
-      message.textContent = "Kata sandi tidak sesuai dengan data demo.";
-      return;
-    }
-    const session = {name: stored?.name || email.split("@")[0], email, at: Date.now()};
-    try { localStorage.setItem("jsvidey-session", JSON.stringify(session)); } catch (_) {}
-    message.className = "form-message success";
-    message.textContent = "Berhasil masuk. Membuka dashboard...";
-    setTimeout(() => location.href = "dashboard.html", 450);
+    const submit = form.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    try {
+      const { data, error } = await window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY).auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      const user = data.user;
+      const { data: profile } = await window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY).from("profiles").select("username, display_name").eq("id", user.id).maybeSingle();
+      localStorage.setItem("jsvidey-session", JSON.stringify({ id: user.id, name: profile?.display_name || profile?.username || user.user_metadata?.username || email.split("@")[0], username: profile?.username || user.user_metadata?.username || "", email: user.email, at: Date.now() }));
+      showMessage(lang === "en" ? "Login successful. Opening dashboard..." : "Berhasil masuk. Membuka dashboard...", true);
+      setTimeout(() => location.href = "dashboard.html", 500);
+    } catch (error) {
+      const message = error?.message || "Login failed.";
+      showMessage(lang === "en" ? (message.includes("Invalid login credentials") ? "Email or password is incorrect." : `Login failed: ${message}`) : (message.includes("Invalid login credentials") ? "Email atau kata sandi salah." : `Gagal masuk: ${message}`));
+    } finally { submit.disabled = false; }
   });
 })();
