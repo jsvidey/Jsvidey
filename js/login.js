@@ -1,4 +1,18 @@
 (() => {
+  const pageTranslations = {"Masuk ke Jsvidey": "Log in to Jsvidey", "Lanjutkan perjalanan kreatormu.": "Continue your creator journey.", "Kata sandi": "Password", "Masukkan kata sandi": "Enter your password", "Tampilkan kata sandi": "Show password", "Masuk": "Login", "Belum punya akun?": "Don’t have an account?", "Daftar": "Register", "Video kamu.": "Your videos.", "Ruang kamu.": "Your space.", "Upload, share, pantau performa, dan kelola konten dari satu tempat.": "Upload, share, track performance, and manage content in one place.", "Demo tampilan: login ini menyimpan status lokal di browser, belum terhubung ke server autentikasi.": "UI demo: this login stores a local browser session and is not connected to server authentication.", "Isi email dan kata sandi terlebih dahulu.": "Enter your email and password first.", "Email tidak ditemukan pada data demo di browser ini. Silakan daftar terlebih dahulu.": "Email not found in this browser demo. Please register first.", "Kata sandi tidak sesuai dengan data demo.": "Password does not match the demo account.", "Berhasil masuk. Membuka dashboard...": "Login successful. Opening dashboard..."};
+  const applyPageLanguage = (lang) => {
+    const reverse = Object.fromEntries(Object.entries(pageTranslations).map(([id,en])=>[en,id]));
+    const map = lang === 'en' ? pageTranslations : reverse;
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+    const nodes=[]; while(walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => { const original=node.nodeValue; const key=original.trim(); if(map[key]) node.nodeValue=original.replace(key,map[key]); });
+    document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(el=>{ const val=el.getAttribute('placeholder'); const next=map[val]; if(next)el.setAttribute('placeholder',next); });
+    document.querySelectorAll('[aria-label]').forEach(el=>{ const val=el.getAttribute('aria-label'); if(map[val])el.setAttribute('aria-label',map[val]); });
+  };
+  let currentPageLang='id'; try{currentPageLang=localStorage.getItem('jsvidey-language')||'id'}catch(_){}
+  applyPageLanguage(currentPageLang);
+  document.addEventListener('jsvidey:language-change', e => applyPageLanguage(e.detail.lang));
+
   document.querySelectorAll("[data-reveal]").forEach(button => button.addEventListener("click", () => {
     const input = document.getElementById(button.dataset.reveal);
     if (!input) return;
