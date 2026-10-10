@@ -10,7 +10,7 @@
   <div id="navbarMount"></div>
   <main class="dashboard wrap page-content">
     <section class="panel page-panel upload-page-panel">
-      <div class="panel-heading"><div><span class="upload-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> CREATOR STUDIO</span><h1><i class="fa-solid fa-cloud-arrow-up upload-title-icon"></i><span data-i18n="uploadVideo">Upload video</span></h1><p data-i18n="uploadNote">Pilih media, unggah langsung ke Backblaze, dan pantau prosesnya.</p></div><span class="upload-limit-pill"><i class="fa-solid fa-shield-halved"></i> <span data-max-upload>Maksimum 20 MB</span></span></div>
+      <div class="panel-heading"><div><span class="upload-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> CREATOR STUDIO</span><h1><i class="fa-solid fa-cloud-arrow-up upload-title-icon"></i><span data-i18n="uploadVideo">Upload video</span></h1><p data-i18n="uploadNote">Pilih media, unggah langsung ke Backblaze, dan pantau prosesnya.</p></div><span class="upload-limit-pill"><i class="fa-solid fa-shield-halved"></i> Maks. 20 MB</span></div>
       <form id="uploadForm" class="upload-form" novalidate>
         <label class="field-label" for="videoTitle"><i class="fa-solid fa-heading title-icon"></i><span data-i18n="videoTitle">Judul video</span></label>
         <input id="videoTitle" name="title" type="text" maxlength="180" required placeholder="Masukkan judul video" autocomplete="off">
@@ -20,7 +20,7 @@
           <span class="drop-icon-wrap"><i class="fa-solid fa-cloud-arrow-up"></i></span>
           <strong>Drag &amp; Drop</strong><span>pilih file untuk di taruh</span>
           <span class="drop-browse"><i class="fa-regular fa-folder-open"></i> Pilih file dari perangkat</span>
-          <small>MP4, WebM, MOV, M4V atau OGV · ukuran file mengikuti batas maksimum platform</small>
+          <small>MP4, WebM, MOV, M4V atau OGV · ukuran file harus di bawah 20 MB</small>
         </label>
         <div id="selectedFile" class="selected-file" hidden></div>
         <div id="uploadNotice" class="upload-notice" role="status" aria-live="polite" hidden>
@@ -36,4 +36,4 @@
   </main>
   <div id="footerMount"></div>
   <script src="js/navbar.js"></script><script src="js/footer.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/upload.js"></script>
-<script src="js/platform-guard.js"></script></body></html>
+</body></html>
