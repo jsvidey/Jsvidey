@@ -1,5 +1,5 @@
 const SUPABASE_URL='https://yihtsjscgwaaxyfkdlos.supabase.co';
-const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1NiIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo';
 (()=>{
   const $=id=>document.getElementById(id), MAX_BYTES=20*1024*1024;
   let lang='id', selectedFile=null, user=null, db=null, xhr=null;
@@ -49,7 +49,7 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1Ni
       if(error){
         // Network or temporary API errors should not destroy a valid persisted session.
         console.error('Jsvidey session validation:',error);
-        msg('Sesi ditemukan, tetapi belum bisa diverifikasi. Periksa koneksi internet lalu muat ulang halaman.');
+        msg('Sesi ditemukan, tetapi Supabase gagal memverifikasinya: '+(error.message||'error tidak diketahui')+'. Muat ulang halaman; jika berulang, kirim teks error ini.');
         return null;
       }
       if(!data?.user){msg('Sesi login tidak ditemukan. Silakan login kembali.');return null;}
