@@ -62,7 +62,34 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
       return null;
     }
   }
-  function putFile(url,file,contentType,onProgress){return new Promise((resolve,reject)=>{xhr=new XMLHttpRequest();xhr.open('PUT',url,true);xhr.setRequestHeader('Content-Type',contentType);xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(e.loaded,e.total)};xhr.onload=()=>{const ok=xhr.status>=200&&xhr.status<300;const err=new Error(`Backblaze upload gagal (HTTP ${xhr.status}). Periksa CORS bucket dan konfigurasi B2.`);xhr=null;ok?resolve():reject(err)};xhr.onerror=()=>{xhr=null;reject(new Error('Koneksi upload terputus. Periksa koneksi dan aturan CORS bucket Backblaze.'))};xhr.onabort=()=>{xhr=null;reject(new Error('Upload dibatalkan.'))};xhr.send(file)})}
+  function putFile(url,file,contentType,onProgress){
+    return new Promise((resolve,reject)=>{
+      const request=new XMLHttpRequest();
+      xhr=request;
+      let finished=false;
+      const finish=callback=>{if(finished)return;finished=true;if(xhr===request)xhr=null;callback()};
+      try{
+        request.open('PUT',url,true);
+        request.timeout=120000;
+        request.setRequestHeader('Content-Type',contentType||'application/octet-stream');
+        request.upload.onprogress=e=>{if(e.lengthComputable)onProgress(e.loaded,e.total)};
+        request.onload=()=>{
+          const status=request.status;
+          const response=(request.responseText||'').trim();
+          if(status>=200&&status<300){finish(resolve);return}
+          // Do not print the signed URL: it contains temporary authorization data.
+          const detail=response?` — ${response.slice(0,300)}`:'';
+          finish(()=>reject(new Error(`Backblaze menolak upload (HTTP ${status})${detail}. Periksa bucket, masa berlaku URL, Content-Type, dan izin B2.`)));
+        };
+        request.onerror=()=>finish(()=>reject(new Error('Browser tidak dapat membaca respons Backblaze. Ini bisa disebabkan CORS, jaringan, atau URL upload yang tidak valid.')));
+        request.ontimeout=()=>finish(()=>reject(new Error('Upload melewati batas waktu 120 detik. Periksa koneksi lalu coba lagi.')));
+        request.onabort=()=>finish(()=>reject(new Error('Upload dibatalkan.')));
+        request.send(file);
+      }catch(error){
+        finish(()=>reject(new Error(`Tidak dapat memulai upload: ${error?.message||'kesalahan browser'}`)));
+      }
+    });
+  }
   $('uploadForm').addEventListener('submit',async e=>{
     e.preventDefault();if(!user||!db){msg('Sesi login belum siap. Tunggu sebentar lalu muat ulang halaman; jika perlu, login kembali.');return;}
     const title=$('videoTitle').value.trim();if(!title){msg('Masukkan judul video terlebih dahulu.');$('videoTitle').focus();return}if(!selectedFile){msg('Pilih file video yang ingin diunggah.');return}if(selectedFile.size>=MAX_BYTES){msg('Ukuran file harus di bawah 20 MB.');return}
