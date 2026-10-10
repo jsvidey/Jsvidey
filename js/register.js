@@ -39,6 +39,8 @@
     const submit = form.querySelector('button[type="submit"]'); submit.disabled = true;
     try {
       const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      const { data: platform } = await client.rpc("jsvidey_public_platform_status");
+      if (platform?.registration_enabled === false) throw new Error(lang === "en" ? "New registrations are temporarily disabled." : "Pendaftaran member baru sedang dinonaktifkan administrator.");
       const { data, error } = await client.auth.signUp({ email, password, options: { data: { username: name, display_name: name } } });
       if (error) throw error;
       if (!data.user) throw new Error("Signup did not return a user.");
