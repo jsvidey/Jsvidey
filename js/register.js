@@ -21,7 +21,7 @@
   }));
   // Paste the Supabase Project URL and anon/publishable key from Project Settings > API.
   const SUPABASE_URL = "https://yihtsjscgwaaxyfkdlos.supabase.co";
-  const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo";
   document.getElementById("registerForm")?.addEventListener("submit", async event => {
     event.preventDefault();
     const name = document.getElementById("regName").value.trim();
