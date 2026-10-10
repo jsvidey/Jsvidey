@@ -19,3 +19,7 @@
 .dashboard button,.dashboard .btn,.dashboard select{transition:background .18s ease,border-color .18s ease,transform .18s ease}
 .dashboard button:focus-visible,.dashboard a:focus-visible,.dashboard input:focus-visible,.dashboard select:focus-visible{outline:2px solid #4ab8ff;outline-offset:3px}
 @media(max-width:540px){.page-content{padding-top:18px;padding-bottom:30px}.page-panel{border-radius:14px}.page-panel .panel-heading{flex-direction:column;align-items:flex-start}.page-panel .status-pill{align-self:flex-start}}
+
+/* Daily rank panel */
+.daily-rank-panel{margin:18px 0;background:linear-gradient(135deg,#101c31,#080f1b);border:1px solid #8fbaff24;border-radius:17px;padding:22px}.daily-rank-panel .panel-heading h2{display:flex;align-items:center;gap:9px}.daily-rank-panel .panel-heading h2 i{color:#f4c65e}.daily-rank-panel .rank-content{padding:8px 0 2px}.daily-rank-panel .rank-number{background:linear-gradient(135deg,#173e67,#17264b);border:1px solid #4ab8ff35}.daily-rank-panel .rank-content p{margin-bottom:0}.daily-rank-panel .rank-content p strong{color:#eaf4ff;margin-left:5px}
+@media(max-width:540px){.daily-rank-panel{padding:17px}.daily-rank-panel .panel-heading{align-items:flex-start}.daily-rank-panel .view-link{font-size:.76rem}}
