@@ -46,9 +46,8 @@ Deno.serve(async (req) => {
     const bucket = Deno.env.get("B2_BUCKET");
     const keyId = Deno.env.get("B2_KEY_ID");
     const applicationKey = Deno.env.get("B2_APPLICATION_KEY");
-    const publicBaseUrl = Deno.env.get("B2_PUBLIC_BASE_URL");
-    if (![endpoint, region, bucket, keyId, applicationKey, publicBaseUrl].every(Boolean)) {
-      throw new Error("Backblaze B2 secrets belum lengkap. Set B2_ENDPOINT, B2_REGION, B2_BUCKET, B2_KEY_ID, B2_APPLICATION_KEY, dan B2_PUBLIC_BASE_URL.");
+    if (![endpoint, region, bucket, keyId, applicationKey].every(Boolean)) {
+      throw new Error("Backblaze B2 secrets belum lengkap. Set B2_ENDPOINT, B2_REGION, B2_BUCKET, B2_KEY_ID, dan B2_APPLICATION_KEY.");
     }
 
     const safeName = fileName.normalize("NFKD").replace(/[^a-zA-Z0-9._-]+/g, "-").replace(/^-+|-+$/g, "").slice(-100) || "video";
@@ -61,9 +60,7 @@ Deno.serve(async (req) => {
     });
     const command = new PutObjectCommand({ Bucket: bucket!, Key: storageKey, ContentType: contentType });
     const uploadUrl = await getSignedUrl(s3, command, { expiresIn: 300 });
-    const base = publicBaseUrl!.replace(/\/$/, "");
-    const publicUrl = `${base}/${storageKey.split("/").map(encodeURIComponent).join("/")}`;
-    return json({ uploadUrl, storageKey, publicUrl, expiresIn: 300 });
+    return json({ uploadUrl, storageKey, expiresIn: 300 });
   } catch (error) {
     console.error("create-b2-upload-url:", error);
     return json({ error: error instanceof Error ? error.message : "Kesalahan server saat menyiapkan upload." }, 500);
