@@ -1,5 +1,39 @@
 <!doctype html>
-<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050912"><title>Upload video — Jsvidey</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="css/upload.css"><link rel="stylesheet" href="css/navbar.css"><link rel="stylesheet" href="css/footer.css"></head>
-<body class="page-upload" data-page="upload"><div id="navbarMount"></div><main class="dashboard wrap page-content"><section class="panel page-panel"><div class="panel-heading"><div><h2><i class="fa-solid fa-cloud-arrow-up"></i><span data-i18n="uploadVideo">Unggah video</span></h2><p data-i18n="uploadNote">Simpan detail video ke database akunmu.</p></div></div><form id="uploadForm" class="upload-form"><label for="videoTitle" data-i18n="videoTitle">Judul video</label><input id="videoTitle" type="text" maxlength="180" required placeholder="Masukkan judul video"><label for="videoUrl" data-i18n="videoUrl">URL video (opsional)</label><input id="videoUrl" type="url" placeholder="https://…"><button class="btn primary" type="submit"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="saveVideo">Simpan detail video</span></button><p class="form-message" id="uploadMessage" role="status"></p><p class="muted" data-i18n="storageNote">Saat ini hanya metadata yang disimpan; penyimpanan file video belum terhubung.</p></form></section></main><div id="footerMount"></div>
-<script src="js/navbar.js"></script><script src="js/footer.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/upload.js"></script></body></html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050912">
+  <title>Upload video — Jsvidey</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+  <link rel="stylesheet" href="css/upload.css"><link rel="stylesheet" href="css/navbar.css"><link rel="stylesheet" href="css/footer.css">
+</head>
+<body class="page-upload" data-page="upload">
+  <div id="navbarMount"></div>
+  <main class="dashboard wrap page-content">
+    <section class="panel page-panel upload-page-panel">
+      <div class="panel-heading"><div><span class="upload-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> CREATOR STUDIO</span><h1><i class="fa-solid fa-cloud-arrow-up upload-title-icon"></i><span data-i18n="uploadVideo">Upload video</span></h1><p data-i18n="uploadNote">Pilih media, unggah langsung ke Backblaze, dan pantau prosesnya.</p></div><span class="upload-limit-pill"><i class="fa-solid fa-shield-halved"></i> Maks. 20 MB</span></div>
+      <form id="uploadForm" class="upload-form" novalidate>
+        <label class="field-label" for="videoTitle"><i class="fa-solid fa-heading title-icon"></i><span data-i18n="videoTitle">Judul video</span></label>
+        <input id="videoTitle" name="title" type="text" maxlength="180" required placeholder="Masukkan judul video" autocomplete="off">
+        <label class="field-label media-label"><i class="fa-solid fa-photo-film media-icon"></i><span>Pilih media video</span></label>
+        <label id="dropZone" class="upload-drop" for="videoFile" tabindex="0" role="button" aria-label="Pilih atau jatuhkan file video">
+          <input id="videoFile" name="videoFile" type="file" accept="video/*,.mp4,.webm,.mov,.m4v,.ogv" hidden>
+          <span class="drop-icon-wrap"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+          <strong>Drag &amp; Drop</strong><span>pilih file untuk di taruh</span>
+          <span class="drop-browse"><i class="fa-regular fa-folder-open"></i> Pilih file dari perangkat</span>
+          <small>MP4, WebM, MOV, M4V atau OGV · ukuran file harus di bawah 20 MB</small>
+        </label>
+        <div id="selectedFile" class="selected-file" hidden></div>
+        <div id="uploadNotice" class="upload-notice" role="status" aria-live="polite" hidden>
+          <div class="notice-top"><span id="noticeIcon" class="notice-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span><div class="notice-copy"><strong id="noticeTitle">Menyiapkan upload…</strong><small id="noticeDetail">Menghubungkan ke penyimpanan aman</small></div><strong id="uploadPercent" class="upload-percent">0%</strong></div>
+          <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
+          <div class="notice-bottom"><span id="uploadStage">Menunggu</span><span id="uploadSize">0 MB / 0 MB</span></div>
+        </div>
+        <button id="uploadButton" class="btn primary upload-submit" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i><span>Upload video</span><i class="fa-solid fa-arrow-right button-arrow"></i></button>
+        <p class="form-message" id="uploadMessage" role="status" aria-live="polite"></p>
+        <p class="storage-footnote"><i class="fa-solid fa-lock"></i> File dikirim langsung ke Backblaze B2 melalui URL upload sementara. Secret key tidak disimpan di browser.</p>
+      </form>
+    </section>
+  </main>
+  <div id="footerMount"></div>
+  <script src="js/navbar.js"></script><script src="js/footer.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/upload.js"></script>
+</body></html>
