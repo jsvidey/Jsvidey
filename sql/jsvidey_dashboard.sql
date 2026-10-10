@@ -84,7 +84,12 @@ from public.video_views vv
 join public.videos v on v.id = vv.video_id and v.user_id = vv.creator_id;
 
 -- Public leaderboard aggregates only public profile names and creator totals.
-create or replace view public.creator_leaderboard as
+-- SECURITY FIX: evaluate base-table privileges and RLS as the querying user.
+-- Note: global leaderboard visibility depends on the SELECT/RLS policies of
+-- profiles, video_views, and creator_earnings. Do not loosen those policies
+-- merely to silence this lint warning.
+create or replace view public.creator_leaderboard
+with (security_invoker = true) as
 select p.id as user_id, p.username, p.display_name,
        coalesce(vt.total_views,0)::bigint as total_views,
        coalesce(et.total_earned_idr,0)::bigint as total_earned_idr
