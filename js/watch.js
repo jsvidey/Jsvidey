@@ -1,0 +1,12 @@
+const SUPABASE_URL='https://yihtsjscgwaaxyfkdlos.supabase.co';
+const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1NiIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo';
+(async()=>{const $=id=>document.getElementById(id), videoId=new URLSearchParams(location.search).get('id');const state=$('state'),player=$('player'),download=$('downloadButton');let db=null,user=null;
+function fail(message){state.hidden=false;state.classList.add('error');state.innerHTML='<i class="fa-solid fa-circle-exclamation"></i> '+message;$('statusText').textContent=message;download.disabled=true}
+if(!videoId){fail('ID video tidak ditemukan di alamat halaman.');return}
+if(!window.supabase){fail('Library Supabase gagal dimuat.');return}
+db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
+try{const {data,error}=await db.functions.invoke('create-b2-playback-url',{body:{videoId}});if(error||!data?.playbackUrl)throw new Error(data?.error||error?.message||'Video belum tersedia atau belum dipublikasikan.');player.src=data.playbackUrl;player.hidden=false;state.hidden=true;$('videoTitle').textContent=data.title||'Video Jsvidey';$('statusText').textContent='Video siap diputar.';}catch(e){fail(e.message||'Gagal memuat video.');return}
+const {data:{user:u}}=await db.auth.getUser();user=u;
+function showLoginState(){if(user){$('loginLink').hidden=true;download.disabled=false;download.innerHTML='<i class="fa-solid fa-download"></i> Download video';}else{$('loginLink').hidden=false;download.disabled=false;download.innerHTML='<i class="fa-solid fa-lock"></i> Login untuk download';}}
+showLoginState();download.addEventListener('click',async()=>{if(!user){location.href='login.html?next='+encodeURIComponent(location.pathname+location.search);return}download.disabled=true;download.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan download…';try{const {data,error}=await db.functions.invoke('create-b2-download-url',{body:{videoId}});if(error||!data?.downloadUrl)throw new Error(data?.error||error?.message||'Link download gagal dibuat.');const a=document.createElement('a');a.href=data.downloadUrl;a.rel='noopener';a.download='';document.body.appendChild(a);a.click();a.remove();$('statusText').textContent='Link download berlaku sekitar 5 menit.';}catch(e){$('statusText').textContent=e.message||'Download gagal.';}finally{showLoginState();}});
+})();
