@@ -20,7 +20,7 @@
     button.innerHTML = input.type === "password" ? '<i class="fa-regular fa-eye"></i>' : '<i class="fa-regular fa-eye-slash"></i>';
   }));
   // Paste the Supabase Project URL and anon/publishable key from Project Settings > API.
-  const SUPABASE_URL = "YOUR_SUPABASE_PROJECT_URL";
+  const SUPABASE_URL = "https://yihtsjscgwaaxyfkdlos.supabase.co";
   const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
   const form = document.getElementById("loginForm");
   const showMessage = (message, success = false) => {
