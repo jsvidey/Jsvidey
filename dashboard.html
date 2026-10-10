@@ -1,66 +1,11 @@
 <!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050912">
-<title>Dashboard — Jsvidey</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-<link rel="stylesheet" href="css/dashboard.css"><link rel="stylesheet" href="css/navbar.css"><link rel="stylesheet" href="css/footer.css">
-</head>
-<body data-page="dashboard">
-<div id="navbarMount"></div>
-<main class="dashboard wrap">
-  <section class="welcome-panel welcome-modern">
-    <div><div class="welcome-overline" data-i18n="welcome">Welcome,</div><h1 id="welcomeName">Creator</h1>
-      <p><span data-i18n="joined">Joined</span> <strong id="joinedDate">—</strong></p><span class="plan-badge" id="planBadge">Basic</span>
-    </div><a class="btn primary" href="#upload"><i class="fa-solid fa-cloud-arrow-up"></i><span data-i18n="uploadVideo">Upload video</span></a>
-  </section>
-  <section class="metric-grid">
-    <article class="metric-card"><span data-i18n="videos">Videos</span><strong id="statVideos">—</strong><i class="fa-solid fa-film"></i></article>
-    <article class="metric-card"><span data-i18n="viewers">Viewers</span><strong id="statViews">—</strong><i class="fa-solid fa-eye"></i></article>
-    <article class="metric-card"><span data-i18n="earned">Earned</span><strong id="statEarned">Rp0</strong><i class="fa-solid fa-coins"></i></article>
-  </section>
-  <section class="dash-section">
-    <div class="section-title"><h2 data-i18n="overview">Overview</h2><span id="dataStatus" class="live-status"><i class="fa-solid fa-circle"></i><span data-i18n="loading">Loading data</span></span></div>
-    <div class="overview-grid">
-      <article class="overview-card online-card"><div class="card-label" data-i18n="online">Online</div><strong id="statOnline">0</strong><small data-i18n="onlineNote">Currently watching your videos</small></article>
-      <article class="overview-card"><div class="card-label" data-i18n="views">Views</div><strong id="overviewViews">0</strong><small data-i18n="allTime">All time</small></article>
-      <article class="overview-card"><div class="card-label" data-i18n="avgCpm">Avg. CPM</div><strong id="avgCpm">Rp0</strong><small data-i18n="perThousand">Per 1,000 monetized views</small></article>
-      <article class="overview-card"><div class="card-label" data-i18n="revenue">Revenue</div><strong id="overviewRevenue">Rp0</strong><small data-i18n="totalRevenue">Total recorded earnings</small></article>
-    </div>
-  </section>
-  <section class="dash-section">
-    <div class="section-title"><h2 data-i18n="performance">Performance</h2></div>
-    <div class="period-grid">
-      <article class="period-card"><span data-i18n="thisWeek">This Week</span><strong id="thisWeekRevenue">Rp0</strong><small id="thisWeekViews">0 views</small></article>
-      <article class="period-card"><span data-i18n="lastWeek">Last Week</span><strong id="lastWeekRevenue">Rp0</strong><small id="lastWeekViews">0 views</small></article>
-      <article class="period-card balance-card"><span data-i18n="balance">Balance</span><strong id="walletBalance">Rp0</strong><small data-i18n="availableBalance">Available balance</small><a href="#settings" data-i18n="manageBalance">Manage balance</a></article>
-    </div>
-  </section>
-  <section class="dashboard-columns dash-lower">
-    <article class="panel rank-panel" id="leaderboard"><div class="panel-heading"><div><h2><i class="fa-solid fa-ranking-star"></i><span data-i18n="dailyRank">Daily Rank</span></h2><p data-i18n="rankSubtitle">Your position among creators</p></div></div>
-      <div class="rank-content"><div class="rank-number" id="dailyRank">-</div><div><strong data-i18n="leaderboard">Leaderboard</strong><p><span data-i18n="rank">Rank</span>: <span id="rankLabel">-</span></p></div></div>
-      <a class="view-link" href="#leaderboardTable"><span data-i18n="viewLeaderboard">View Leaderboard</span><i class="fa-solid fa-arrow-right"></i></a>
-    </article>
-    <article class="panel stats-panel"><div class="panel-heading"><div><h2 data-i18n="statistics">Statistics</h2><p data-i18n="statsSubtitle">Your channel at a glance</p></div></div>
-      <div class="chart-tabs"><button type="button" class="active" data-chart="earnings" data-i18n="earning">EARNING</button><button type="button" data-chart="viewers" data-i18n="viewersCaps">VIEWERS</button></div>
-      <div class="mini-chart" id="statsChart" aria-label="Statistics chart"><div class="chart-empty" data-i18n="noStats">Statistics will appear when view and earning records are available.</div></div>
-    </article>
-  </section>
-  <section class="panel top-videos-panel" id="myFile"><div class="panel-heading"><div><h2><i class="fa-solid fa-circle-play"></i><span data-i18n="topVideos">Top Videos</span></h2><p data-i18n="topVideosSubtitle">Your most viewed videos</p></div><a class="view-link" href="#upload"><span data-i18n="uploadVideo">Upload video</span><i class="fa-solid fa-arrow-right"></i></a></div>
-    <div id="videoList" class="video-list"><div class="empty-state"><i class="fa-solid fa-photo-film"></i><strong data-i18n="loadingVideos">Loading videos…</strong></div></div>
-  </section>
-  <section class="dashboard-columns dash-lower">
-    <article class="panel" id="upload"><div class="panel-heading"><div><h2><i class="fa-solid fa-cloud-arrow-up"></i><span data-i18n="uploadVideo">Upload video</span></h2><p data-i18n="uploadNote">Save video details to your account database.</p></div></div>
-      <form id="uploadForm" class="upload-form"><label for="videoTitle" data-i18n="videoTitle">Video title</label><input id="videoTitle" type="text" maxlength="180" required placeholder="Enter video title"><label for="videoUrl" data-i18n="videoUrl">Video URL (optional)</label><input id="videoUrl" type="url" placeholder="https://…"><button class="btn primary" type="submit"><i class="fa-solid fa-floppy-disk"></i><span data-i18n="saveVideo">Save video details</span></button><p class="form-message" id="uploadMessage" role="status"></p><p class="muted" data-i18n="storageNote">This saves metadata only; actual video file storage is not connected yet.</p></form>
-    </article>
-    <article class="panel" id="searchPanel"><div class="panel-heading"><div><h2><i class="fa-solid fa-magnifying-glass"></i><span data-i18n="search">Search</span></h2><p data-i18n="searchSubtitle">Find a video in your library</p></div></div><div class="search-box"><i class="fa-solid fa-magnifying-glass"></i><input id="videoSearch" placeholder="Search your videos…"></div>
-      <div id="profilePanel" class="profile-summary"><h3 data-i18n="account">Account</h3><p><span data-i18n="username">Username</span>: <strong id="profileName">—</strong></p><p>Email: <strong id="profileEmail">—</strong></p><p><span data-i18n="settings">Settings</span>: <a href="#settings" data-i18n="profileSettings">Profile settings</a></p>
-      <button class="btn secondary" id="logoutButton" type="button"><i class="fa-solid fa-right-from-bracket"></i><span data-i18n="logOut">Log out</span></button></div>
-    </article>
-  </section>
-  <section class="panel" id="leaderboardTable"><div class="panel-heading"><div><h2><i class="fa-solid fa-trophy"></i><span data-i18n="leaderboard">Leaderboard</span></h2></div></div><div id="leaderboardList" class="leaderboard-list"><p class="muted" data-i18n="loadingLeaderboard">Loading leaderboard…</p></div></section>
-  <section class="panel" id="settings"><div class="panel-heading"><div><h2><i class="fa-solid fa-gear"></i><span data-i18n="settings">Settings</span></h2><p data-i18n="settingsNote">Account and payout settings will be expanded in a later step.</p></div></div><p class="muted" id="dashboardMessage" role="status"></p></section>
-</main>
-<div id="footerMount"></div>
-<script src="js/navbar.js"></script><script src="js/footer.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/dashboard.js"></script>
-</body></html>
+<html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#050912"><title>Dashboard — Jsvidey</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"><link rel="stylesheet" href="css/dashboard.css"><link rel="stylesheet" href="css/navbar.css"><link rel="stylesheet" href="css/footer.css"></head>
+<body data-page="dashboard"><div id="navbarMount"></div><main class="dashboard wrap page-content">
+<section class="welcome-panel welcome-modern"><div><div class="welcome-overline" data-i18n="welcome">Selamat datang,</div><h1 id="welcomeName">Creator</h1><p><span data-i18n="joined">Bergabung</span> <strong id="joinedDate">—</strong></p><span class="plan-badge" id="planBadge">Basic</span></div><a class="btn primary" href="upload.html"><i class="fa-solid fa-cloud-arrow-up"></i><span data-i18n="uploadVideo">Unggah video</span></a></section>
+<section class="metric-grid"><article class="metric-card"><span data-i18n="videos">Video</span><strong id="statVideos">0</strong><i class="fa-solid fa-film"></i></article><article class="metric-card"><span data-i18n="viewers">Penonton</span><strong id="statViews">0</strong><i class="fa-solid fa-eye"></i></article><article class="metric-card"><span data-i18n="earned">Penghasilan</span><strong id="statEarned">Rp0</strong><i class="fa-solid fa-coins"></i></article></section>
+<section class="dash-section"><div class="section-title"><h2 data-i18n="overview">Ringkasan</h2><span id="dataStatus" class="live-status"><i class="fa-solid fa-circle"></i><span data-i18n="loading">Memuat data</span></span></div><div class="overview-grid"><article class="overview-card online-card"><div class="card-label" data-i18n="online">Online</div><strong id="statOnline">0</strong><small data-i18n="onlineNote">Sedang menonton video kamu</small></article><article class="overview-card"><div class="card-label" data-i18n="views">Penayangan</div><strong id="overviewViews">0</strong><small data-i18n="allTime">Sepanjang waktu</small></article><article class="overview-card"><div class="card-label" data-i18n="avgCpm">Rata-rata CPM</div><strong id="avgCpm">Rp0</strong><small data-i18n="perThousand">Per 1.000 tayangan termonetisasi</small></article><article class="overview-card"><div class="card-label" data-i18n="revenue">Pendapatan</div><strong id="overviewRevenue">Rp0</strong><small data-i18n="totalRevenue">Total penghasilan tercatat</small></article></div></section>
+<section class="dash-section"><div class="section-title"><h2 data-i18n="performance">Performa</h2></div><div class="period-grid"><article class="period-card"><span data-i18n="thisWeek">Minggu Ini</span><strong id="thisWeekRevenue">Rp0</strong><small id="thisWeekViews">0 penayangan</small></article><article class="period-card"><span data-i18n="lastWeek">Minggu Lalu</span><strong id="lastWeekRevenue">Rp0</strong><small id="lastWeekViews">0 penayangan</small></article><article class="period-card balance-card"><span data-i18n="balance">Saldo</span><strong id="walletBalance">Rp0</strong><small data-i18n="availableBalance">Saldo tersedia</small><a href="withdraw.html" data-i18n="manageBalance">Kelola saldo / Withdraw</a></article></div></section>
+<section class="panel stats-panel"><div class="panel-heading"><div><h2 data-i18n="statistics">Statistik</h2><p data-i18n="statsSubtitle">Ringkasan channel kamu</p></div></div><div class="chart-tabs"><button type="button" class="active" data-chart="earnings" data-i18n="earning">PENGHASILAN</button><button type="button" data-chart="viewers" data-i18n="viewersCaps">PENONTON</button></div><div class="mini-chart" id="statsChart"><div class="chart-empty" data-i18n="noStats">Statistik akan muncul saat data tersedia.</div></div></section>
+<section class="panel top-videos-panel"><div class="panel-heading"><div><h2><i class="fa-solid fa-circle-play"></i><span data-i18n="topVideos">Video Teratas</span></h2><p data-i18n="topVideosSubtitle">Video kamu dengan penayangan terbanyak</p></div><a class="view-link" href="my-file.html"><span data-i18n="viewAllFiles">Lihat semua file</span><i class="fa-solid fa-arrow-right"></i></a></div><div id="videoList" class="video-list"><div class="empty-state"><i class="fa-solid fa-photo-film"></i><strong data-i18n="loadingVideos">Memuat video…</strong></div></div></section></main><div id="footerMount"></div>
+<script src="js/navbar.js"></script><script src="js/footer.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="js/dashboard.js"></script></body></html>
