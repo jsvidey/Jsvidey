@@ -1,0 +1,6 @@
+/* Upload page — shared Jsvidey visual system + page-specific layout */
+@import url("./dashboard.css");
+.page-upload .page-panel { max-width: 900px; }
+.page-upload .upload-form { width: 100%; }
+.page-upload .upload-drop { min-height: 190px; }
+.page-upload .panel-heading { padding-bottom: 16px; border-bottom: 1px solid #8fbaff1b; }

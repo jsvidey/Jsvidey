@@ -1,0 +1,6 @@
+/* My files page — shared Jsvidey visual system + page-specific layout */
+@import url("./dashboard.css");
+.page-my-file .page-panel { max-width: 1080px; }
+.page-my-file .panel-heading { padding-bottom: 16px; border-bottom: 1px solid #8fbaff1b; }
+.page-my-file .video-list { margin-top: 18px; }
+.page-my-file .empty-state { border: 1px dashed #8fbaff26; border-radius: 14px; background: #08111f80; padding: 24px; }
