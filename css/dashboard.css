@@ -53,3 +53,11 @@
 .dashboard i[class*="fa-"] { -webkit-font-smoothing:antialiased; }
 .dashboard a:hover i,.dashboard button:hover i { transform:translateY(-1px); }
 @media(prefers-reduced-motion:reduce){.dashboard :is(i,.video-thumb){transition:none!important}}
+
+
+/* Full-color Font Awesome icon accents + realtime live indicator */
+.colorful-icon{margin-right:6px;display:inline-block;filter:drop-shadow(0 0 7px currentColor);}
+.colorful-icon.blue{color:#55b8ff}.colorful-icon.purple{color:#b69aff}.colorful-icon.green{color:#45e0a4}.colorful-icon.gold{color:#ffd166}.colorful-icon.cyan{color:#4de2e8}.colorful-icon.pink{color:#ff78c7}
+.metric-card>span{display:flex;align-items:center;gap:4px}.metric-card>span .colorful-icon{font-size:1rem}
+.card-label{display:flex;align-items:center;gap:5px}.live-dot{display:inline-block;width:8px;height:8px;margin-left:5px;border-radius:50%;background:#617086;vertical-align:middle}.live-dot.is-live{background:#38ef8b;box-shadow:0 0 0 0 #38ef8b99;animation:jsvidey-live-pulse 1.35s infinite}.live-dot.event-pulse{background:#5bffa3;box-shadow:0 0 0 0 #5bffa3;animation:jsvidey-live-pulse .55s 3}@keyframes jsvidey-live-pulse{0%{box-shadow:0 0 0 0 #38ef8b99;transform:scale(.92)}70%{box-shadow:0 0 0 8px #38ef8b00;transform:scale(1.15)}100%{box-shadow:0 0 0 0 #38ef8b00;transform:scale(.92)}}
+@media(prefers-reduced-motion:reduce){.live-dot.is-live,.live-dot.event-pulse{animation:none}}
