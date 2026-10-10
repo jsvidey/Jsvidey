@@ -8,3 +8,14 @@ body.js-logged-in .bottom-nav{display:flex}
 .language-picker option{background:#0b1424;color:#edf5ff}
 @media(max-width:820px){.nav-actions{gap:6px}.language-picker{height:35px;padding:0 6px}.desktop-dashboard{display:none}}
 @media(max-width:420px){.language-picker{gap:3px;padding:0 5px}.language-picker select{font-size:.72rem}}
+
+/* Dashboard navigation visibility fix */
+.top-dashboard-links{display:flex;align-items:center;gap:3px;margin-left:auto;min-width:0}
+.top-dashboard-links a{display:inline-flex;align-items:center;gap:6px;padding:9px 8px;border-radius:9px;color:#a9bad2;font-size:.78rem;font-weight:700;white-space:nowrap}
+.top-dashboard-links a i{color:#42b8ff}
+.top-dashboard-links a:hover,.top-dashboard-links a.active{background:#168cff18;color:#fff}
+.nav-logout{white-space:nowrap}
+@media(max-width:1100px){.top-dashboard-links a{padding:8px 5px;font-size:.72rem;gap:4px}.top-dashboard-links a i{display:none}.nav-logout{padding:8px 9px!important;font-size:.75rem!important}}
+@media(max-width:820px){.top-dashboard-links{display:none}.nav-inner{justify-content:space-between}.nav-logout{font-size:.72rem!important}}
+@media(min-width:821px){body.jsvidey-logged-in{padding-bottom:82px}.bottom-nav{display:flex!important}}
+body.jsvidey-logged-in .bottom-nav{display:flex!important}
