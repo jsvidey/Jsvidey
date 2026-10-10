@@ -23,6 +23,11 @@
   const SUPABASE_URL = "https://yihtsjscgwaaxyfkdlos.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo";
   const form = document.getElementById("loginForm");
+  // Use one Supabase client for both authentication and profile lookup.
+  // Multiple clients sharing the same auth storage can race on mobile browsers.
+  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
+  });
   const showMessage = (message, success = false) => {
     const el = document.getElementById("loginMessage");
     el.className = success ? "form-message success" : "form-message";
@@ -40,10 +45,14 @@
     const submit = form.querySelector('button[type="submit"]');
     submit.disabled = true;
     try {
-      const { data, error } = await window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY).auth.signInWithPassword({ email, password });
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
       if (error) throw error;
       const user = data.user;
-      const { data: profile } = await window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY).from("profiles").select("username, display_name").eq("id", user.id).maybeSingle();
+      const { data: profile, error: profileError } = await supabaseClient.from("profiles").select("username, display_name").eq("id", user.id).maybeSingle();
+      if (profileError) console.warn("Could not load profile after login:", profileError.message);
+      // Confirm the authenticated session is available before navigating away.
+      const { data: sessionData, error: sessionError } = await supabaseClient.auth.getSession();
+      if (sessionError || !sessionData.session) throw new Error("Login berhasil, tetapi sesi tidak tersimpan. Coba login lagi dan pastikan Safari mengizinkan penyimpanan situs.");
       localStorage.setItem("jsvidey-session", JSON.stringify({ id: user.id, name: profile?.display_name || profile?.username || user.user_metadata?.username || email.split("@")[0], username: profile?.username || user.user_metadata?.username || "", email: user.email, at: Date.now() }));
       showMessage(lang === "en" ? "Login successful. Opening dashboard..." : "Berhasil masuk. Membuka dashboard...", true);
       setTimeout(() => location.href = "dashboard.html", 500);
