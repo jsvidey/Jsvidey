@@ -81,7 +81,7 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
           const detail=response?` — ${response.slice(0,300)}`:'';
           finish(()=>reject(new Error(`Backblaze menolak upload (HTTP ${status})${detail}. Periksa bucket, masa berlaku URL, Content-Type, dan izin B2.`)));
         };
-        request.onerror=()=>finish(()=>reject(new Error('Browser tidak dapat membaca respons Backblaze. Ini bisa disebabkan CORS, jaringan, atau URL upload yang tidak valid.')));
+        request.onerror=()=>{console.error('Jsvidey Backblaze PUT network/CORS failure',{readyState:request.readyState,status:request.status});finish(()=>reject(new Error('Upload ke Backblaze gagal sebelum browser dapat membaca respons (status tidak tersedia). Ini biasanya CORS/preflight atau koneksi. Pastikan aturan CORS bucket showjsbot-storage berlaku untuk S3 Compatible API, origin https://jsvidey.pages.dev, metode PUT, dan header Content-Type. Jika aturan sudah benar, periksa URL bertanda tangan dan endpoint/region di Supabase.')))};
         request.ontimeout=()=>finish(()=>reject(new Error('Upload melewati batas waktu 120 detik. Periksa koneksi lalu coba lagi.')));
         request.onabort=()=>finish(()=>reject(new Error('Upload dibatalkan.')));
         request.send(file);
