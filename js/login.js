@@ -23,11 +23,22 @@
   const SUPABASE_URL = "https://yihtsjscgwaaxyfkdlos.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlpaHRzanNjZ3dhYXh5ZmtkbG9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE1NzA4NzgsImV4cCI6MjEwNzE0Njg3OH0.7-sfZ2nwoy7iOzGGdx69cWRj2C_Bdhk39y7_CdNfrlo";
   const form = document.getElementById("loginForm");
-  // Use one Supabase client for both authentication and profile lookup.
-  // Multiple clients sharing the same auth storage can race on mobile browsers.
-  const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
-    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true }
-  });
+  // Reuse one Supabase client per page and the same storage key on every page.
+  // This avoids auth-storage races between independently-created clients on mobile.
+  const getSupabaseClient = () => {
+    if (window.jsvideySupabaseClient) return window.jsvideySupabaseClient;
+    if (!window.supabase?.createClient) throw new Error("Library Supabase gagal dimuat. Periksa koneksi internet.");
+    window.jsvideySupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+      auth: {
+        storageKey: "sb-yihtsjscgwaaxyfkdlos-auth-token",
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    });
+    return window.jsvideySupabaseClient;
+  };
+  const supabaseClient = getSupabaseClient();
   const showMessage = (message, success = false) => {
     const el = document.getElementById("loginMessage");
     el.className = success ? "form-message success" : "form-message";

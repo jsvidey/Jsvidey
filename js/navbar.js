@@ -3,7 +3,18 @@
   const langKey='jsvidey-language';
   const getLang=()=>{try{return localStorage.getItem(langKey)||'id'}catch(_){return'id'}};
   const t=(id,en)=>getLang()==='en'?en:id;
-  const loggedIn=()=>{try{return Boolean(localStorage.getItem('jsvidey-session'))}catch(_){return false}};
+  const loggedIn=()=>{
+    try{
+      if(localStorage.getItem('jsvidey-session'))return true;
+      // Supabase's persisted session is the source of truth when the legacy UI marker is missing.
+      const exactKey='sb-yihtsjscgwaaxyfkdlos-auth-token';
+      const raw=localStorage.getItem(exactKey);
+      if(!raw)return false;
+      const saved=JSON.parse(raw);
+      const session=saved?.currentSession||saved;
+      return Boolean(session?.access_token&&session?.user?.id);
+    }catch(_){return false}
+  };
   const logged=loggedIn(),page=document.body.dataset.page||'';
   const appPages=['dashboard','upload','my-file','leaderboard','search','withdraw','settings'];
   const showBottomNav=appPages.includes(page);

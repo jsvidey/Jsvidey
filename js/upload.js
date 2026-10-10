@@ -23,10 +23,48 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1Ni
   ['dragleave','drop'].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();drop.classList.remove('drag-over')}));
   drop.addEventListener('drop',e=>selectFile(e.dataTransfer?.files?.[0]));
   const setBusy=busy=>{const btn=$('uploadButton');btn.disabled=busy;btn.innerHTML=busy?'<i class="fa-solid fa-spinner fa-spin"></i><span>Mengunggah…</span>':'<i class="fa-solid fa-cloud-arrow-up"></i><span>Upload video</span><i class="fa-solid fa-arrow-right button-arrow"></i>';picker.disabled=busy};
-  async function getUser(){if(!window.supabase){msg('Library Supabase gagal dimuat. Periksa koneksi internet.');return null}db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);const {data:{user:u},error}=await db.auth.getUser();if(error||!u){try{localStorage.removeItem('jsvidey-session')}catch(_){}location.replace('login.html');return null}return u}
+  function getSupabaseClient(){
+    if(window.jsvideySupabaseClient)return window.jsvideySupabaseClient;
+    if(!window.supabase?.createClient)throw new Error('Library Supabase gagal dimuat. Periksa koneksi internet.');
+    window.jsvideySupabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{
+      auth:{storageKey:'sb-yihtsjscgwaaxyfkdlos-auth-token',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
+    });
+    return window.jsvideySupabaseClient;
+  }
+  const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+  async function getUser(){
+    try{
+      if(!window.supabase?.createClient){msg('Library Supabase gagal dimuat. Periksa koneksi internet lalu muat ulang halaman.');return null}
+      db=getSupabaseClient();
+      let sessionResult=await db.auth.getSession();
+      if(sessionResult.error)throw sessionResult.error;
+      // On mobile Safari the SDK may need a moment to restore the persisted session.
+      if(!sessionResult.data?.session){await wait(350);sessionResult=await db.auth.getSession();if(sessionResult.error)throw sessionResult.error;}
+      if(!sessionResult.data?.session){
+        try{localStorage.removeItem('jsvidey-session')}catch(_){}
+        location.replace('login.html?next=upload.html');
+        return null;
+      }
+      const {data,error}=await db.auth.getUser();
+      if(error){
+        // Network or temporary API errors should not destroy a valid persisted session.
+        console.error('Jsvidey session validation:',error);
+        msg('Sesi ditemukan, tetapi belum bisa diverifikasi. Periksa koneksi internet lalu muat ulang halaman.');
+        return null;
+      }
+      if(!data?.user){msg('Sesi login tidak ditemukan. Silakan login kembali.');return null;}
+      const u=data.user;
+      try{localStorage.setItem('jsvidey-session',JSON.stringify({id:u.id,name:u.user_metadata?.display_name||u.user_metadata?.username||u.email?.split('@')[0]||'Member',username:u.user_metadata?.username||'',email:u.email||'',at:Date.now()}))}catch(_){}
+      return u;
+    }catch(error){
+      console.error('Jsvidey auth check:',error);
+      msg('Tidak dapat memeriksa sesi login. Periksa koneksi lalu muat ulang halaman.');
+      return null;
+    }
+  }
   function putFile(url,file,contentType,onProgress){return new Promise((resolve,reject)=>{xhr=new XMLHttpRequest();xhr.open('PUT',url,true);xhr.setRequestHeader('Content-Type',contentType);xhr.upload.onprogress=e=>{if(e.lengthComputable)onProgress(e.loaded,e.total)};xhr.onload=()=>{const ok=xhr.status>=200&&xhr.status<300;const err=new Error(`Backblaze upload gagal (HTTP ${xhr.status}). Periksa CORS bucket dan konfigurasi B2.`);xhr=null;ok?resolve():reject(err)};xhr.onerror=()=>{xhr=null;reject(new Error('Koneksi upload terputus. Periksa koneksi dan aturan CORS bucket Backblaze.'))};xhr.onabort=()=>{xhr=null;reject(new Error('Upload dibatalkan.'))};xhr.send(file)})}
   $('uploadForm').addEventListener('submit',async e=>{
-    e.preventDefault();if(!user||!db)return;
+    e.preventDefault();if(!user||!db){msg('Sesi login belum siap. Tunggu sebentar lalu muat ulang halaman; jika perlu, login kembali.');return;}
     const title=$('videoTitle').value.trim();if(!title){msg('Masukkan judul video terlebih dahulu.');$('videoTitle').focus();return}if(!selectedFile){msg('Pilih file video yang ingin diunggah.');return}if(selectedFile.size>=MAX_BYTES){msg('Ukuran file harus di bawah 20 MB.');return}
     const file=selectedFile, contentType=file.type||'video/mp4';setBusy(true);msg('');showNotice('upload','Menyiapkan upload…','Meminta URL upload aman dari server',0,'Persiapan',`0 MB / ${fmtBytes(file.size)}`);
     try{
@@ -42,6 +80,6 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhbGciOiJIUzI1Ni
     }catch(err){console.error('Jsvidey upload:',err);if(!$('uploadNotice').classList.contains('is-error'))showNotice('error','Upload gagal',err.message||'Terjadi kesalahan saat mengunggah.',0,'Gagal',selectedFile?`0 MB / ${fmtBytes(selectedFile.size)}`:'');msg(err.message||'Upload gagal. Coba lagi.')}
     finally{setBusy(false)}
   });
-  document.addEventListener('jsvidey:logout',async()=>{if(db)await db.auth.signOut()});
+  document.addEventListener('jsvidey:logout',async()=>{try{localStorage.removeItem('jsvidey-session')}catch(_){}if(db)await db.auth.signOut();location.href='login.html'});
   getUser().then(u=>{user=u}).catch(err=>{console.error(err);msg('Tidak dapat memeriksa sesi login.')});
 })();
