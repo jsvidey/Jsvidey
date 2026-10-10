@@ -113,3 +113,10 @@ grant select on public.creator_wallets to authenticated;
 -- Backfill a wallet for users who existed before this migration.
 insert into public.creator_wallets(user_id)
 select id from auth.users on conflict(user_id) do nothing;
+
+
+-- Enable INSERT events for live dashboard view activity. Run as Supabase SQL editor owner.
+do $$ begin
+  alter publication supabase_realtime add table public.video_views;
+exception when duplicate_object then null;
+end $$;
