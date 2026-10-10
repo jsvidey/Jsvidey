@@ -1,7 +1,8 @@
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { S3Client, GetObjectCommand } from "npm:@aws-sdk/client-s3@3.800.0";
 import { getSignedUrl } from "npm:@aws-sdk/s3-request-presigner@3.800.0";
-const corsHeaders = { "Access-Control-Allow-Origin": Deno.env.get("APP_ORIGIN") || "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type", "Access-Control-Allow-Methods": "POST, OPTIONS", "Vary": "Origin" };
+const corsHeaders = { "Access-Control-Allow-Origin": Deno.env.get("APP_ORIGIN") || "*", "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-api-version", "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Max-Age": "86400", "Vary": "Origin" };
 const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers: { ...corsHeaders, "Content-Type": "application/json" } });
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
