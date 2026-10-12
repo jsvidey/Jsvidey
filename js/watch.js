@@ -35,22 +35,23 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storageKey:'sb-yihtsjscgwaaxyfkdlos-auth-token',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  try{
    const {data,error}=await db.rpc('get_public_embed_video',{p_video_id:videoId});
-   const record=Array.isArray(data)?data[0]:data;
-   if(!error&&record?.video_url&&record.status==='published'){
-     window.__videoTitle=record.title||'Video Jsvidey';
-     showEmbed(record.video_url);
-     const {data:authData}=await db.auth.getUser();user=authData?.user||null;
-     download.hidden=true;
+   if(error){
+     console.error('get_public_embed_video failed:',error);
+     fail('Gagal membaca data video dari Supabase. Pastikan SQL get_public_embed_video.sql sudah dijalankan dan fungsi memberi akses kepada anon.');
      return;
    }
- }catch(e){console.warn('Embed lookup:',e)}
- // Existing private Backblaze videos keep using the original secure playback endpoint.
- try{
-   const {data,error}=await db.functions.invoke('create-b2-playback-url',{body:{videoId}});
-   if(error||!data?.playbackUrl)throw new Error(data?.error||error?.message||'Video tidak ditemukan. Untuk link embed baru, jalankan SQL migration get_public_embed_video.sql di Supabase.');
-   player.src=data.playbackUrl;player.hidden=false;state.hidden=true;$('videoTitle').textContent=data.title||'Video Jsvidey';$('statusText').textContent='Video siap diputar.';
- }catch(e){fail(e.message||'Gagal memuat video.');return}
- const {data:{user:u}}=await db.auth.getUser();user=u;
- function showLoginState(){if(user){$('loginLink').hidden=true;download.disabled=false;download.innerHTML='<i class="fa-solid fa-download"></i> Download video';}else{$('loginLink').hidden=false;download.disabled=false;download.innerHTML='<i class="fa-solid fa-lock"></i> Login untuk download';}}
- showLoginState();download.hidden=false;download.addEventListener('click',async()=>{if(!user){location.href='login.html?next='+encodeURIComponent(location.pathname+location.search);return}download.disabled=true;download.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i> Menyiapkan download…';try{const {data,error}=await db.functions.invoke('create-b2-download-url',{body:{videoId}});if(error||!data?.downloadUrl)throw new Error(data?.error||error?.message||'Link download gagal dibuat.');const a=document.createElement('a');a.href=data.downloadUrl;a.rel='noopener';a.download='';document.body.appendChild(a);a.click();a.remove();$('statusText').textContent='Link download berlaku sekitar 5 menit.';}catch(e){$('statusText').textContent=e.message||'Download gagal.';}finally{showLoginState();}});
+   const record=Array.isArray(data)?data[0]:data;
+   if(!record?.video_url||record.status!=='published'){
+     fail('Video tidak ditemukan atau belum dipublikasikan.');
+     return;
+   }
+   window.__videoTitle=record.title||'Video Jsvidey';
+   showEmbed(record.video_url);
+   download.hidden=true;
+ }catch(e){
+   console.error('Embed lookup failed:',e);
+   fail('Tidak dapat menghubungi Supabase. Periksa koneksi internet lalu muat ulang halaman.');
+   return;
+ }
+
 })();
