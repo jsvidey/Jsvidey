@@ -4,3 +4,15 @@
 .page-my-file .panel-heading { padding-bottom: 16px; border-bottom: 1px solid #8fbaff1b; }
 .page-my-file .video-list { margin-top: 18px; }
 .page-my-file .empty-state { border: 1px dashed #8fbaff26; border-radius: 14px; background: #08111f80; padding: 24px; }
+
+/* Clickable media cards and provider thumbnails */
+.page-my-file .video-item-link{display:flex;align-items:center;gap:12px;color:inherit;text-decoration:none;cursor:pointer;transition:border-color .18s,transform .18s}
+.page-my-file .video-item-link:hover,.page-my-file .video-item-link:focus-visible{border-color:#43b5ff80;outline:none;transform:translateY(-1px)}
+.page-my-file .video-thumb{position:relative;overflow:hidden}
+.page-my-file .video-thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.page-my-file .video-thumb.has-thumb .video-thumb-fallback{display:none}
+.page-my-file .video-thumb-fallback{position:relative;z-index:1;opacity:.85;text-shadow:0 1px 5px #000}
+.page-my-file .video-item-copy{display:block;min-width:0;flex:1}
+.page-my-file .video-item-copy strong{overflow-wrap:anywhere}
+.page-my-file .video-item-arrow{color:#6c8bb3;font-size:.8rem;flex:none}
+.page-my-file .video-open-hint{color:#51baff!important;font-size:.72rem!important}
