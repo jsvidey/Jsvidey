@@ -24,6 +24,7 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
    return {embed,provider,direct};
  }
  function showEmbed(url){
+   window.__sourceVideoUrl=url;
    const m=classify(url);$('videoTitle').textContent=window.__videoTitle||'Video Jsvidey';
    if(m.direct){player.src=m.embed;player.hidden=false;frame.hidden=true;}
    else{iframe.src=m.embed;frame.hidden=false;player.hidden=true;}
