@@ -34,23 +34,47 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  if(!window.supabase?.createClient){fail('Library Supabase gagal dimuat.');return}
  db=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY,{auth:{storageKey:'sb-yihtsjscgwaaxyfkdlos-auth-token',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
  try{
-   const {data,error}=await db.rpc('get_public_embed_video',{p_video_id:videoId});
-   if(error){
-     console.error('get_public_embed_video failed:',error);
-     fail('Gagal membaca data video dari Supabase. Pastikan SQL get_public_embed_video.sql sudah dijalankan dan fungsi memberi akses kepada anon.');
+   // Call the Supabase RPC endpoint directly. This page is embed-only and must not
+   // fall back to the legacy Backblaze/B2 Edge Function.
+   const controller = new AbortController();
+   const timeout = setTimeout(() => controller.abort(), 12000);
+   let response, payload;
+   try {
+     response = await fetch(SUPABASE_URL + '/rest/v1/rpc/get_public_embed_video', {
+       method: 'POST',
+       headers: {
+         'Content-Type': 'application/json',
+         'apikey': SUPABASE_ANON_KEY,
+         'Authorization': 'Bearer ' + SUPABASE_ANON_KEY
+       },
+       body: JSON.stringify({ p_video_id: videoId }),
+       signal: controller.signal,
+       cache: 'no-store'
+     });
+     payload = await response.json().catch(() => null);
+   } finally {
+     clearTimeout(timeout);
+   }
+   if (!response.ok) {
+     console.error('get_public_embed_video HTTP error:', response.status, payload);
+     const detail = payload?.message || payload?.hint || payload?.details || ('HTTP ' + response.status);
+     fail('Supabase menolak permintaan (' + response.status + '): ' + detail);
      return;
    }
-   const record=Array.isArray(data)?data[0]:data;
-   if(!record?.video_url||record.status!=='published'){
+   const record = Array.isArray(payload) ? payload[0] : payload;
+   if (!record?.video_url || record.status !== 'published') {
      fail('Video tidak ditemukan atau belum dipublikasikan.');
      return;
    }
-   window.__videoTitle=record.title||'Video Jsvidey';
+   window.__videoTitle = record.title || 'Video Jsvidey';
    showEmbed(record.video_url);
-   download.hidden=true;
- }catch(e){
-   console.error('Embed lookup failed:',e);
-   fail('Tidak dapat menghubungi Supabase. Periksa koneksi internet lalu muat ulang halaman.');
+   download.hidden = true;
+ } catch(e) {
+   console.error('Embed lookup failed:', e);
+   const detail = e?.name === 'AbortError'
+     ? 'Permintaan ke Supabase melewati batas waktu 12 detik.'
+     : (e?.message || String(e));
+   fail('Gagal memuat link embed dari Supabase: ' + detail + ' Coba muat ulang halaman.');
    return;
  }
 
