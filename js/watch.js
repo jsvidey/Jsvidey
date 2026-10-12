@@ -4,7 +4,7 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  const $=id=>document.getElementById(id);
  const videoId=new URLSearchParams(location.search).get('id');
  const state=$('state'),player=$('player'),frame=$('embedFrame'),iframe=$('embedPlayer');
- const download=$('downloadButton'); // Optional: this element isn't present on watch.html.
+ const download=$('downloadButton'); // Optional legacy element; the visible download action is downloadPageButton.
  function fail(message){
    if(state){state.hidden=false;state.classList.add('error');state.textContent=message;}
    const status=$('statusText');if(status)status.textContent=message;
@@ -38,11 +38,12 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
    const m=classify(url);
    window.__sourceVideoUrl=url;
    const titleEl=$('videoTitle');if(titleEl)titleEl.textContent=title||'Video Jsvidey';
-   if(m.direct){player.src=m.embed;player.hidden=false;frame.hidden=true;}
-   else{iframe.src=m.embed;frame.hidden=false;player.hidden=true;}
+   if(m.direct){iframe.removeAttribute('src');frame.hidden=true;player.src=m.embed;player.hidden=false;}
+   else{player.pause();player.removeAttribute('src');player.load();player.hidden=true;iframe.src=m.embed;frame.hidden=false;}
    if(state)state.hidden=true;
    const status=$('statusText');
-   if(status)status.textContent='Media: '+m.provider+'. Jika tidak tampil, pastikan link dapat diakses dan penyedia mengizinkan embed.';
+   if(status)status.textContent='Media: '+m.provider+'. Tombol Download tersedia di bagian bawah video jika penyedia mendukungnya.';
+   const downloadPageButton=$('downloadPageButton');if(downloadPageButton)downloadPageButton.href='download.html?id='+encodeURIComponent(videoId);
    if(download)download.hidden=true;
  }
  if(!videoId){fail('ID video tidak ditemukan di alamat halaman.');return;}
