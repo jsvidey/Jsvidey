@@ -4,7 +4,11 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
  const $=id=>document.getElementById(id);
  const videoId=new URLSearchParams(location.search).get('id');
  const state=$('state'),player=$('player'),frame=$('embedFrame'),iframe=$('embedPlayer');
- const download=$('downloadButton'); // Optional legacy element; the visible download action is downloadPageButton.
+ const download=$('downloadButton'); // Optional legacy element; the visible download action is downloadPageButton;
+ const ratioTools=$('ratioTools');
+ const ratioButtons=ratioTools?Array.from(ratioTools.querySelectorAll('[data-ratio]')):[];
+ function setRatio(mode){if(frame){frame.classList.toggle('landscape',mode==='landscape');}ratioButtons.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.ratio===mode)));}
+ ratioButtons.forEach(b=>b.addEventListener('click',()=>setRatio(b.dataset.ratio)));
  function fail(message){
    if(state){state.hidden=false;state.classList.add('error');state.textContent=message;}
    const status=$('statusText');if(status)status.textContent=message;
@@ -38,8 +42,8 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
    const m=classify(url);
    window.__sourceVideoUrl=url;
    const titleEl=$('videoTitle');if(titleEl)titleEl.textContent=title||'Video Jsvidey';
-   if(m.direct){iframe.removeAttribute('src');frame.hidden=true;player.src=m.embed;player.hidden=false;}
-   else{player.pause();player.removeAttribute('src');player.load();player.hidden=true;iframe.src=m.embed;frame.hidden=false;}
+   if(m.direct){if(ratioTools)ratioTools.hidden=true;iframe.removeAttribute('src');frame.hidden=true;player.src=m.embed;player.hidden=false;player.onloadedmetadata=()=>{if(player.videoWidth&&player.videoHeight){player.style.aspectRatio=player.videoWidth+'/'+player.videoHeight;}};}
+   else{player.pause();player.removeAttribute('src');player.load();player.hidden=true;iframe.src=m.embed;frame.hidden=false;const isDrive=m.provider==='Google Drive';if(ratioTools)ratioTools.hidden=!isDrive;setRatio(isDrive?'portrait':'landscape');}
    if(state)state.hidden=true;
    const status=$('statusText');
    if(status)status.textContent='Media: '+m.provider+'. Tombol Download tersedia di bagian bawah video jika penyedia mendukungnya.';
