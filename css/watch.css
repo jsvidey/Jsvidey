@@ -1,1 +1,30 @@
 *{box-sizing:border-box}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at top,#19234a 0,#0a0d18 50%,#070910 100%);color:#f4f6ff;font-family:Inter,system-ui,-apple-system,sans-serif}.watch-shell{max-width:1000px;margin:auto;padding:28px 18px}.brand{display:inline-flex;gap:10px;align-items:center;color:#fff;text-decoration:none;font-weight:800;font-size:22px;margin-bottom:24px}.brand i{color:#a78bfa}.player-card{overflow:hidden;border:1px solid #29304a;background:#111625;border-radius:22px;box-shadow:0 20px 70px #0005}.state{min-height:260px;display:flex;gap:12px;align-items:center;justify-content:center;color:#c4c9df;background:#080b13}video{display:block;width:100%;max-height:72vh;background:#000;aspect-ratio:16/9}.video-info{padding:22px}.video-info h1{font-size:clamp(22px,4vw,32px);margin:0 0 8px}.video-info p{color:#aeb7d0;line-height:1.6}.actions{display:flex;flex-wrap:wrap;gap:12px;margin:20px 0}.actions button,.login-link{border:0;border-radius:12px;padding:12px 16px;font-weight:700;background:linear-gradient(110deg,#7c3aed,#2563eb);color:white;text-decoration:none;cursor:pointer}.actions button:disabled{opacity:.5;cursor:not-allowed}.hint{font-size:13px}.error{color:#fecaca}.ok{color:#a7f3d0}@media(max-width:600px){.watch-shell{padding:18px 12px}.video-info{padding:16px}.state{min-height:190px}}
+/* Video social actions */
+.watch-shell{max-width:1000px;padding-top:28px;padding-bottom:36px}
+.player-card{background:linear-gradient(145deg,#111a2d,#0b1220);border-color:rgba(130,160,220,.2)}
+.embed-frame{position:relative;width:100%;aspect-ratio:16/9;background:#000}
+.embed-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.watch-social{margin:18px 0 8px}
+.social-actions{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.social-action{min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid rgba(142,178,229,.18);border-radius:16px;background:linear-gradient(145deg,#111c30,#0b1322);color:#c8d7ee;font:inherit;font-size:.8rem;font-weight:750;cursor:pointer;transition:transform .18s,border-color .18s,background .18s}
+.social-action i{font-size:1.15rem;color:#55bfff}
+.social-action strong{font-size:.7rem;color:#91a7c6}
+.social-action:hover{transform:translateY(-2px);border-color:#398fff;background:#13213a}
+.social-action.liked{border-color:#fb568d;background:#34172b;color:#fff}
+.social-action.liked i{color:#ff5a91}
+.social-notice{min-height:18px;margin:10px 2px;color:#9db8d8;font-size:.82rem}
+.comment-card{padding:20px;border:1px solid rgba(142,178,229,.17);border-radius:20px;background:linear-gradient(145deg,#101a2b,#0a111f)}
+.comment-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}
+.comment-heading h2{margin:0;font-size:1.1rem}.comment-heading h2 i{color:#4bbdff;margin-right:8px}
+.comment-count{color:#8fa8c8;font-size:.8rem}
+.comment-form{display:flex;gap:10px;align-items:stretch}
+.comment-form textarea{flex:1;min-width:0;min-height:48px;max-height:130px;resize:vertical;border:1px solid #293b57;border-radius:12px;padding:12px;background:#080f1c;color:#f4f7ff;font:inherit;font-size:.9rem}
+.comment-form button{border:0;border-radius:12px;padding:0 16px;background:linear-gradient(110deg,#267eff,#19bce9);color:white;font:inherit;font-weight:750;cursor:pointer}
+.comment-list{display:grid;gap:10px;margin-top:16px}
+.comment-item{padding:12px 14px;border-radius:12px;background:#0a1322;border:1px solid rgba(142,178,229,.1);overflow-wrap:anywhere}
+.comment-item p{margin:6px 0 0;color:#d4dfef;line-height:1.5;white-space:pre-wrap}
+.comment-meta{font-size:.75rem;color:#8099ba}
+.empty-comments{margin:0;padding:18px 8px;text-align:center;color:#8099ba;font-size:.88rem}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#footerMount{margin-top:28px}
+@media(max-width:600px){.watch-shell{padding:16px 12px 24px}.social-actions{gap:7px}.social-action{min-height:66px;border-radius:13px;font-size:.72rem}.social-action i{font-size:1.05rem}.comment-card{padding:15px}.comment-form{flex-direction:column}.comment-form button{min-height:44px}.video-info h1{overflow-wrap:anywhere}}
