@@ -23,6 +23,13 @@
         </div>
         <button id="uploadButton" class="btn primary upload-submit" type="submit"><i class="fa-solid fa-link"></i><span>Simpan link media</span><i class="fa-solid fa-arrow-right button-arrow"></i></button>
         <p class="form-message" id="uploadMessage" role="status" aria-live="polite"></p>
+        <section id="savedResult" class="saved-result" hidden aria-live="polite">
+          <h2><i class="fa-solid fa-circle-check"></i> Link berhasil dibuat!</h2>
+          <p>Bagikan link Jsvidey ini kepada siapa saja yang ingin menonton.</p>
+          <label for="shareUrl">Link halaman video</label>
+          <div class="share-url-row"><input id="shareUrl" type="url" readonly><button id="copyShareUrl" type="button"><i class="fa-solid fa-copy"></i> Salin link</button></div>
+          <a id="openShareUrl" class="saved-video-link" target="_blank" rel="noopener"><i class="fa-solid fa-arrow-up-right-from-square"></i> Buka halaman video</a>
+        </section>
         <p class="storage-footnote"><i class="fa-solid fa-circle-info"></i> Pastikan kamu memiliki izin untuk membagikan media. Beberapa situs mungkin melarang embed atau meminta login.</p>
       </form>
     </section>
