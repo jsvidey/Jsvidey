@@ -16,3 +16,13 @@
 .page-my-file .video-item-copy strong{overflow-wrap:anywhere}
 .page-my-file .video-item-arrow{color:#6c8bb3;font-size:.8rem;flex:none}
 .page-my-file .video-open-hint{color:#51baff!important;font-size:.72rem!important}
+
+/* Thumbnail polish and reliable clickable cards */
+.page-my-file .video-thumb{width:112px;height:68px;flex:none;border:1px solid #8fbaff25;background:linear-gradient(135deg,#123d70,#241b53);color:#eaf7ff}
+.page-my-file .video-thumb img{z-index:0}
+.page-my-file .video-thumb-fallback{z-index:1;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:#06101dcc;color:#fff;box-shadow:0 2px 12px #0008}
+.page-my-file .video-thumb.has-thumb .video-thumb-fallback{display:grid;opacity:.95}
+.page-my-file .video-item-link{min-width:0}
+.page-my-file .video-item-copy{overflow:hidden}
+.page-my-file .video-item-copy strong{display:block}
+@media(max-width:480px){.page-my-file .video-thumb{width:96px;height:64px}}
