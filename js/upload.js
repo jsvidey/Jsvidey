@@ -56,6 +56,15 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
     return {url:u.href,provider,embedUrl:embedUrl||u.href,isDirect};
   }
   const urlInput=$('mediaUrl');
+  const savedResult=$('savedResult');
+  $('copyShareUrl').addEventListener('click',async()=>{
+    const value=$('shareUrl').value;
+    try{
+      if(navigator.clipboard&&window.isSecureContext) await navigator.clipboard.writeText(value);
+      else { $('shareUrl').focus();$('shareUrl').select();if(!document.execCommand('copy'))throw new Error('Salin manual'); }
+      $('copyShareUrl').innerHTML='<i class="fa-solid fa-check"></i> Tersalin!';
+    }catch(_){$('shareUrl').focus();$('shareUrl').select();msg('Link sudah dipilih. Tekan Salin/Copy pada menu iPhone.',true)}
+  });
   function updatePreview(){
     const value=urlInput.value.trim();
     if(!value){$('embedPreview').hidden=true;return}
@@ -70,15 +79,16 @@ const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYm
     if(!title){msg('Masukkan judul video.');$('videoTitle').focus();return}
     let media;try{media=classify(urlInput.value)}catch(err){msg(err.message);urlInput.focus();return}
     const btn=$('uploadButton');btn.disabled=true;btn.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>Menyimpan link…</span>';
-    msg('');
+    msg('');savedResult.hidden=true;
     try{
       const {data,error}=await db.from('videos').insert({user_id:user.id,title,video_url:media.url,status:'published'}).select('id').single();
       if(error)throw error;
-      msg('Link media berhasil disimpan! Video sekarang bisa dibagikan melalui halaman Jsvidey.',true);
+      msg('Link media berhasil disimpan. Link Jsvidey siap dibagikan di bawah ini.',true);
       $('uploadForm').reset();$('embedPreview').hidden=true;
       const shareUrl=new URL('watch.html',location.href);shareUrl.searchParams.set('id',data.id);
-      const share=document.createElement('a');share.href=shareUrl.href;share.textContent='Buka halaman video';share.className='saved-video-link';share.target='_blank';share.rel='noopener';
-      $('uploadMessage').appendChild(document.createTextNode(' '));$('uploadMessage').appendChild(share);
+      $('shareUrl').value=shareUrl.href;$('openShareUrl').href=shareUrl.href;
+      $('copyShareUrl').innerHTML='<i class="fa-solid fa-copy"></i> Salin link';
+      savedResult.hidden=false;savedResult.scrollIntoView({behavior:'smooth',block:'center'});
     }catch(err){console.error('Jsvidey embed link save:',err);msg('Gagal menyimpan link: '+(err.message||'Periksa koneksi, login, dan kebijakan Supabase.'))}
     finally{btn.disabled=false;btn.innerHTML='<i class="fa-solid fa-link"></i><span>Simpan link media</span><i class="fa-solid fa-arrow-right button-arrow"></i>'}
   });
