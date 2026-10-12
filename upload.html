@@ -10,27 +10,20 @@
   <div id="navbarMount"></div>
   <main class="dashboard wrap page-content">
     <section class="panel page-panel upload-page-panel">
-      <div class="panel-heading"><div><span class="upload-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> CREATOR STUDIO</span><h1><i class="fa-solid fa-cloud-arrow-up upload-title-icon"></i><span data-i18n="uploadVideo">Upload video</span></h1><p data-i18n="uploadNote">Pilih media, unggah langsung ke Backblaze, dan pantau prosesnya.</p></div><span class="upload-limit-pill"><i class="fa-solid fa-shield-halved"></i> Maks. 20 MB</span></div>
+      <div class="panel-heading"><div><span class="upload-eyebrow"><i class="fa-solid fa-wand-magic-sparkles"></i> CREATOR STUDIO</span><h1><i class="fa-solid fa-cloud-arrow-up upload-title-icon"></i><span data-i18n="uploadVideo">Upload video</span></h1><p data-i18n="uploadNote">Tambahkan link media untuk ditampilkan melalui embed.</p></div><span class="upload-limit-pill"><i class="fa-solid fa-link"></i> Embed saja</span></div>
       <form id="uploadForm" class="upload-form" novalidate>
-        <label class="field-label" for="videoTitle"><i class="fa-solid fa-heading title-icon"></i><span data-i18n="videoTitle">Judul video</span></label>
+        <label class="field-label" for="videoTitle"><i class="fa-solid fa-heading title-icon"></i><span>Judul video</span></label>
         <input id="videoTitle" name="title" type="text" maxlength="180" required placeholder="Masukkan judul video" autocomplete="off">
-        <label class="field-label media-label"><i class="fa-solid fa-photo-film media-icon"></i><span>Pilih media video</span></label>
-        <label id="dropZone" class="upload-drop" for="videoFile" tabindex="0" role="button" aria-label="Pilih atau jatuhkan file video">
-          <input id="videoFile" name="videoFile" type="file" accept="video/*,.mp4,.webm,.mov,.m4v,.ogv" hidden>
-          <span class="drop-icon-wrap"><i class="fa-solid fa-cloud-arrow-up"></i></span>
-          <strong>Drag &amp; Drop</strong><span>pilih file untuk di taruh</span>
-          <span class="drop-browse"><i class="fa-regular fa-folder-open"></i> Pilih file dari perangkat</span>
-          <small>MP4, WebM, MOV, M4V atau OGV · ukuran file harus di bawah 20 MB</small>
-        </label>
-        <div id="selectedFile" class="selected-file" hidden></div>
-        <div id="uploadNotice" class="upload-notice" role="status" aria-live="polite" hidden>
-          <div class="notice-top"><span id="noticeIcon" class="notice-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span><div class="notice-copy"><strong id="noticeTitle">Menyiapkan upload…</strong><small id="noticeDetail">Menghubungkan ke penyimpanan aman</small></div><strong id="uploadPercent" class="upload-percent">0%</strong></div>
-          <div class="progress-track"><div id="progressBar" class="progress-fill"></div></div>
-          <div class="notice-bottom"><span id="uploadStage">Menunggu</span><span id="uploadSize">0 MB / 0 MB</span></div>
+        <label class="field-label media-label" for="mediaUrl"><i class="fa-solid fa-link media-icon"></i><span>Link video / media</span></label>
+        <input id="mediaUrl" name="mediaUrl" type="url" required inputmode="url" placeholder="https://..." autocomplete="url">
+        <p class="embed-help">Tempel link YouTube, Google Drive, Videy, atau link media HTTPS lainnya. Website hanya menyimpan link dan menampilkannya lewat embed — file tidak diunggah ke server Jsvidey.</p>
+        <div id="embedPreview" class="embed-preview" hidden>
+          <span class="preview-icon"><i class="fa-solid fa-display"></i></span>
+          <div><strong id="previewProvider">Media link</strong><small id="previewUrl"></small></div>
         </div>
-        <button id="uploadButton" class="btn primary upload-submit" type="submit"><i class="fa-solid fa-cloud-arrow-up"></i><span>Upload video</span><i class="fa-solid fa-arrow-right button-arrow"></i></button>
+        <button id="uploadButton" class="btn primary upload-submit" type="submit"><i class="fa-solid fa-link"></i><span>Simpan link media</span><i class="fa-solid fa-arrow-right button-arrow"></i></button>
         <p class="form-message" id="uploadMessage" role="status" aria-live="polite"></p>
-        <p class="storage-footnote"><i class="fa-solid fa-lock"></i> File dikirim langsung ke Backblaze B2 melalui URL upload sementara. Secret key tidak disimpan di browser.</p>
+        <p class="storage-footnote"><i class="fa-solid fa-circle-info"></i> Pastikan kamu memiliki izin untuk membagikan media. Beberapa situs mungkin melarang embed atau meminta login.</p>
       </form>
     </section>
   </main>
