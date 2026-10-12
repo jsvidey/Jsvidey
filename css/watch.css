@@ -10,9 +10,9 @@ button,a{-webkit-tap-highlight-color:transparent}
 .kicker-divider{color:#455673}
 .player-card{overflow:hidden;border:1px solid var(--line);border-radius:22px;background:linear-gradient(145deg,rgba(20,31,51,.98),rgba(11,17,29,.98));box-shadow:0 22px 70px #0006}
 .player-stage{position:relative;background:#020308;min-height:220px}
-.embed-frame{position:relative;width:100%;aspect-ratio:16/9;background:#020308}
+.embed-frame{position:relative;width:100%;aspect-ratio:9/16;background:#020308;transition:aspect-ratio .18s ease}.embed-frame.landscape{aspect-ratio:16/9}.embed-frame iframe{display:block}.ratio-tools{display:flex;align-items:center;justify-content:flex-end;gap:8px;padding:9px 12px;background:#080d18;border-bottom:1px solid var(--line);color:#9baac3;font-size:.78rem}.ratio-tools button{border:1px solid #293b57;border-radius:9px;padding:7px 10px;background:#111c2e;color:#cbd8ed;font-size:.76rem}.ratio-tools button[aria-pressed="true"]{background:#173e65;border-color:#398fff;color:#fff}.ratio-tools[hidden]{display:none!important}
 .embed-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
-video{display:block;width:100%;max-height:75vh;aspect-ratio:16/9;background:#000;object-fit:contain}
+video{display:block;width:100%;height:auto;max-height:none;aspect-ratio:auto;background:#000;object-fit:contain}
 .state{min-height:clamp(220px,56vw,540px);display:flex;flex-direction:column;gap:13px;align-items:center;justify-content:center;padding:25px;text-align:center;color:#b9c8e1;background:radial-gradient(ellipse at center,#111c30,#03050a 75%)}
 .state i{font-size:1.8rem;color:var(--blue)}
 .state.error{color:#ffc0c0}
@@ -59,7 +59,7 @@ video{display:block;width:100%;max-height:75vh;aspect-ratio:16/9;background:#000
 .gate-continue{display:block;width:100%;margin-top:11px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#ffffff08;color:#dbe7f8;font-weight:750;cursor:pointer}
 .telegram-card small{display:block;margin-top:15px;color:#7487a5;font-size:.7rem;line-height:1.45}
 @keyframes gateFade{from{opacity:0}to{opacity:1}}@keyframes gateRise{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
-@media(max-width:600px){.watch-shell{width:calc(100% - 24px);padding:19px 0 28px}.player-card{border-radius:17px}.player-stage{min-height:190px}.video-info{padding:17px}.social-actions{gap:7px}.social-action{min-height:69px;border-radius:13px;font-size:.72rem}.social-action i{font-size:1.05rem}.comments-panel{padding:15px}.telegram-card{padding:28px 20px 20px;border-radius:23px}}
+@media(max-width:600px){.watch-shell{width:calc(100% - 24px);padding:19px 0 28px}.player-card{border-radius:17px}.player-stage{min-height:0}.video-info{padding:17px}.social-actions{gap:7px}.social-action{min-height:69px;border-radius:13px;font-size:.72rem}.social-action i{font-size:1.05rem}.comments-panel{padding:15px}.telegram-card{padding:28px 20px 20px;border-radius:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
 
 /* Fix: honor HTML hidden attribute; prevents loading/error overlay over embedded media. */
