@@ -1,4 +1,4 @@
--- Jsvidey Admin Control Center. Run after jsvidey_auth.sql, jsvidey_dashboard.sql and jsvidey_backblaze_upload.sql.
+-- Jsvidey Admin Control Center. Run after jsvidey_auth.sql, jsvidey_dashboard.sql.
 -- SECURITY: admin membership is stored separately; ordinary users cannot promote themselves through profiles.
 create table if not exists public.jsvidey_admins (
   user_id uuid primary key references auth.users(id) on delete cascade,
