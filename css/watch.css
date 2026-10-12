@@ -61,3 +61,6 @@ video{display:block;width:100%;max-height:75vh;aspect-ratio:16/9;background:#000
 @keyframes gateFade{from{opacity:0}to{opacity:1}}@keyframes gateRise{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:600px){.watch-shell{width:calc(100% - 24px);padding:19px 0 28px}.player-card{border-radius:17px}.player-stage{min-height:190px}.video-info{padding:17px}.social-actions{gap:7px}.social-action{min-height:69px;border-radius:13px;font-size:.72rem}.social-action i{font-size:1.05rem}.comments-panel{padding:15px}.telegram-card{padding:28px 20px 20px;border-radius:23px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;scroll-behavior:auto!important;transition:none!important}}
+
+/* Fix: honor HTML hidden attribute; prevents loading/error overlay over embedded media. */
+[hidden]{display:none !important}
